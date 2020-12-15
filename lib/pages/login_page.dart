@@ -1,8 +1,11 @@
+import 'package:chat/helpers/mostrar_alerta.dart';
+import 'package:chat/services/auth_service.dart';
 import 'package:chat/widgets/boton_azul.dart';
 import 'package:chat/widgets/custom_input.dart';
 import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -23,7 +26,7 @@ class LoginPage extends StatelessWidget {
                   ruta: 'register',
                   titulo: '¿No tienes cuenta?',
                   subTitulo: 'Crea una ahora',
-                  ),
+                ),
                 Text('Terminos y condiciones de uso',
                     style: TextStyle(fontWeight: FontWeight.w200))
               ],
@@ -46,6 +49,9 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
         margin: EdgeInsets.only(top: 1),
         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -58,22 +64,29 @@ class __FormState extends State<_Form> {
               textController: emailCtrl,
             ),
             CustomInput(
-              icon: Icons.mail_outline,
+              icon: Icons.lock_outline,
               placeholder: 'Cotraseña',
               textController: passCtrl,
               isPassword: true,
             ),
-
             BotonAzul(
               text: 'Ingrese',
-              onPressed: (){
+              onPressed: authService.autenticando ? null : () async {
 
+                FocusScope.of(context).unfocus();
+
+                final loginOk = await authService.login(emailCtrl.text.trim(), passCtrl.text.trim());
+
+                if(loginOk){
+                  //TODO: Conectar a nuestro socket service
+                  Navigator.pushReplacementNamed(context, 'usuarios');
+                }else{
+                  //Mostrar alerta
+                  mostrarAlerta(context, 'Login incorrecto', 'Revise sus credenciales');
+                }
               },
             )
-            
           ],
         ));
   }
 }
-
-

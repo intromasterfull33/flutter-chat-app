@@ -13,12 +13,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   final _textController = new TextEditingController();
   final _focusNode = new FocusNode();
 
-  List<ChatMessage> _messages = [
-    ChatMessage(
-      uid: '123',
-      texto: 'Hola mundo',
-    )
-  ];
+  List<ChatMessage> _messages = [];
 
   bool _estaEscribiendo = false;
 
@@ -133,7 +128,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       texto: texto,
       animationController: AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 2000),
+        duration: Duration(milliseconds: 400),
       ),
     );
     _messages.insert(0, newMessage);
