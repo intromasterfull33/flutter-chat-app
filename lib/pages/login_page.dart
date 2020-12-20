@@ -1,5 +1,6 @@
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/socket_service.dart';
 import 'package:chat/widgets/boton_azul.dart';
 import 'package:chat/widgets/custom_input.dart';
 import 'package:chat/widgets/labels.dart';
@@ -51,6 +52,7 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     return Container(
         margin: EdgeInsets.only(top: 1),
@@ -78,7 +80,7 @@ class __FormState extends State<_Form> {
                 final loginOk = await authService.login(emailCtrl.text.trim(), passCtrl.text.trim());
 
                 if(loginOk){
-                  //TODO: Conectar a nuestro socket service
+                  socketService.connect();
                   Navigator.pushReplacementNamed(context, 'usuarios');
                 }else{
                   //Mostrar alerta
